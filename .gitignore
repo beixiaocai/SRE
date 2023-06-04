@@ -1,0 +1,13 @@
+﻿# clion
+.idea/
+cmake-build-debug/*
+build/*
+
+# vs
+.vs
+
+# Qt Creator
+SRE.pro.user*
+
+
+
