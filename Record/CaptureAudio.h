@@ -1,15 +1,16 @@
-﻿#ifndef ACQSCREEN_H
-#define ACQSCREEN_H
+#ifndef CAPTUREAUDIO_H
+#define CAPTUREAUDIO_H
 
 #include <QObject>
 #include <thread>
 class FFmpegEncoder;
-class AcqScreen : public QObject
+
+class CaptureAudio : public QObject
 {
     Q_OBJECT
 public:
-    explicit AcqScreen(QObject *parent,FFmpegEncoder* encoder);
-    ~AcqScreen();
+    explicit CaptureAudio(QObject *parent,FFmpegEncoder* encoder);
+    ~CaptureAudio();
 private:
     static void run_thread(void* arg);
 public:
@@ -22,11 +23,10 @@ private:
     bool mIsStop = true;
     std::thread *mThread;
 
-
 signals:
 
 private slots:
 
 };
 
-#endif // ACQSCREEN_H
+#endif // CAPTUREAUDIO_H

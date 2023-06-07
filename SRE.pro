@@ -14,8 +14,7 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
-    mainwindow.h \
-    style.h
+    mainwindow.h
 
 RESOURCES += \
     res/res.qrc
@@ -28,8 +27,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 include(3rdparty/3rdparty.pri)
-include(View/View.pri)
-include(Recorder/Recorder.pri)
+include(Index/Index.pri)
+include(Record/Record.pri)
+include(VNCServer/VNCServer.pri)
+include(VNCClient/VNCClient.pri)
 include(Utils/Utils.pri)
 
 win32: LIBS += -ld3d11

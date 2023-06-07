@@ -1,5 +1,4 @@
 ﻿#include "About.h"
-#include "style.h"
 #include "constant.h"
 #include "ComLineWidget.h"
 #include <QVBoxLayout>
@@ -52,7 +51,7 @@ void About::initTopUi(){
     logo->setPixmap(QIcon(":/res/images/logo.png").pixmap(36,40));
 
     QLabel *nameLabel = new QLabel(logoWidget);
-    nameLabel->setStyleSheet(m_stylesheet_QLabel30);
+    nameLabel->setStyleSheet(".QLabel{color:rgb(0,0,0);font-family:Microsoft YaHei;font-size:30px;}");
     nameLabel->setText(QCoreApplication::applicationName());
 
     logoHLayout->addSpacing(20);
@@ -100,11 +99,11 @@ void About::initBottomUi(){
     bottomVLayout->setContentsMargins(20,10,20,10);
 
     QLabel *copyrightLabel = new QLabel(bottomWidget);
-    copyrightLabel->setStyleSheet(m_stylesheet_QLabel14);
+    copyrightLabel->setStyleSheet(".QLabel{color:rgb(0,0,0);font-family:Microsoft YaHei;font-size:14px;}");
     copyrightLabel->setText(QString("当前版本 V%1").arg(QCoreApplication::applicationVersion()));
 
     QLabel *authorLabel = new QLabel(bottomWidget);
-    authorLabel->setStyleSheet(m_stylesheet_QLabel14);
+    authorLabel->setStyleSheet(".QLabel{color:rgb(0,0,0);font-family:Microsoft YaHei;font-size:14px;}");
     authorLabel->setText(tr("作者 <a style='text-decoration:none;color:rgb(43,113,237);' href='https://space.bilibili.com/487906612'>北小菜</a>"));
     authorLabel->setOpenExternalLinks(true);
     connect(authorLabel,&QLabel::linkActivated,this,[](const QString &link){
@@ -120,7 +119,7 @@ void About::initBottomUi(){
     osHLayout->setContentsMargins(0,0,0,0);
 
     QLabel *osLabel = new QLabel(osWidget);
-    osLabel->setStyleSheet(m_stylesheet_QLabel14);
+    osLabel->setStyleSheet(".QLabel{color:rgb(0,0,0);font-family:Microsoft YaHei;font-size:14px;}");
     osLabel->setText("开源地址");
     QToolButton *osAddressBtn = new QToolButton(osWidget);
     osAddressBtn->setCursor(Qt::PointingHandCursor);

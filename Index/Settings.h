@@ -3,11 +3,10 @@
 
 #include <QDialog>
 QT_BEGIN_NAMESPACE;
-class QVBoxLayout;
 class QCheckBox;
 class QLineEdit;
+class QStackedWidget;
 QT_END_NAMESPACE;
-class ComSpinWidget;
 
 class Settings : public QDialog
 {
@@ -16,9 +15,13 @@ public:
     explicit Settings(QWidget *parent);
 
 private:
-    QVBoxLayout *mainVLayout;
+    void initUi();
+    QWidget* initLeftWidget();
+    QWidget* initRightWidget();
+    QStackedWidget *rightStackedWidget;
 
-    void initBottomUi();
+    void initCommonWidget();
+
 
 signals:
 

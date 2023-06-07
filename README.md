@@ -7,6 +7,11 @@
 * 软件github开源地址：https://github.com/any12345com/SRE
 * 软件gitee开源地址：https://gitee.com/Vanishi/SRE
 
+### 视频教程
+* 软件介绍 [视频地址](https://www.bilibili.com/video/BV1YW4y1R7ri/)
+* day1分支源码讲解视频 [视频地址](https://www.bilibili.com/video/BV1Po4y1g7KX/)
+* day2分支源码讲解视频 
+
 ### 软件介绍
 
 - 一个Qt开发的免费开源的国产录屏软件，将来还会扩展类似于VNC一样的远程控制的功能。

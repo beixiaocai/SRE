@@ -1,5 +1,6 @@
 HEADERS += \
     $$PWD/Utils.h \
+    $$PWD/SingletonUtils.h \
     $$PWD/ComLineWidget.h \
     $$PWD/ComLoadingLabel.h \
     $$PWD/ComLoadingWidget.h \
@@ -11,6 +12,7 @@ HEADERS += \
     $$PWD/constant.h
 	
 SOURCES += \
+    $$PWD/SingletonUtils.cpp \
     $$PWD/ComLineWidget.cpp \
     $$PWD/ComLoadingLabel.cpp \
     $$PWD/ComLoadingWidget.cpp \

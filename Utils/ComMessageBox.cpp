@@ -1,5 +1,4 @@
 ﻿#include "ComMessageBox.h"
-#include "style.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>

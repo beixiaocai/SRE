@@ -1,16 +1,17 @@
-﻿#ifndef RECORDAUDIO_H
-#define RECORDAUDIO_H
+﻿#ifndef CAPTUREVIDEO_H
+#define CAPTUREVIDEO_H
 
 #include <QObject>
 #include <thread>
 class FFmpegEncoder;
+class Assistant;
 
-class AcqFFmpeg : public QObject
+class CaptureVideo : public QObject
 {
     Q_OBJECT
 public:
-    explicit AcqFFmpeg(QObject *parent,FFmpegEncoder* encoder);
-    ~AcqFFmpeg();
+    explicit CaptureVideo(QObject *parent,FFmpegEncoder* encoder);
+    ~CaptureVideo();
 private:
     static void run_thread(void* arg);
 public:
@@ -18,6 +19,7 @@ public:
     int pause();
     int stop();
 private:
+    Assistant* mAssist;
     FFmpegEncoder* mEncoder;
     bool mIsRecording = false;//是否在录制中
     bool mIsStop = true;
@@ -29,4 +31,4 @@ private slots:
 
 };
 
-#endif // RECORDAUDIO_H
+#endif // CAPTUREVIDEO_H
