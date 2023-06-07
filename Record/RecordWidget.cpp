@@ -11,7 +11,6 @@
 #include "ComLineWidget.h"
 #include "Utils.h"
 #include "Assistant.h"
-#include "RecordPlayer.h"
 #include "SingletonUtils.h"
 #include <QDebug>
 #include <QsLog.h>
