@@ -8,9 +8,11 @@
 * 软件gitee开源地址：https://gitee.com/Vanishi/SRE
 
 ### 视频教程
+
 * 软件介绍 [视频地址](https://www.bilibili.com/video/BV1YW4y1R7ri/)
 * day1分支源码讲解视频 [视频地址](https://www.bilibili.com/video/BV1Po4y1g7KX/)
-* day2分支源码讲解视频 
+* day2分支源码讲解视频 [视频地址](https://www.bilibili.com/video/BV1aV4y1271j/)
+* day3分支源码讲解视频 
 
 ### 软件介绍
 

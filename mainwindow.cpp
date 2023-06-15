@@ -19,14 +19,14 @@ MainWindow::MainWindow(QWidget *parent)
 //    QScreen * screen = QGuiApplication::primaryScreen();//获取主屏幕
     QScreen * screen = screens.at(0);//获取多屏幕第一块屏幕（暂未做多屏幕的兼容）
     QRect screenRect = screen->geometry();
-    int screenW = screenRect.width();
-    int screenH = screenRect.height();
+    int screenWidth = screenRect.width();
+    int screenHeight = screenRect.height();
 
-    int initW = int(float(screenW) * 0.62);
-    int initH = int(float(screenH) * 0.66);
+    int initW = int(float(screenWidth) * 0.5);
+    int initH = int(float(screenHeight) * 0.5);
 
-    QLOG_INFO() << "MainWindow::MainWindow() screens.size="<< screens.size()<<",screenW="<<screenW<<",screenH="<<screenH<<",initW="<<initW<<",initH="<<initH;
-    qDebug() << "MainWindow::MainWindow() screens.size="<< screens.size()<<",screenW="<<screenW<<",screenH="<<screenH<<",initW="<<initW<<",initH="<<initH;
+    QLOG_INFO() << "MainWindow::MainWindow() screens="<<screens.size()<<",screenWidth="<<screenWidth<<",screenHeight="<<screenHeight<<",initW="<<initW<<",initH="<<initH;
+    qDebug() << "MainWindow::MainWindow() screens="<<screens.size()<<",screenWidth="<<screenWidth<<",screenHeight="<<screenHeight<<",initW="<<initW<<",initH="<<initH;
 
     this->resize(initW,initH);
 

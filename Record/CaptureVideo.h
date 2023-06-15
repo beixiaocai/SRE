@@ -3,14 +3,14 @@
 
 #include <QObject>
 #include <thread>
-class FFmpegEncoder;
-class Assistant;
+class CaptureFFmpegEncoder;
+class CaptureAssistant;
 
 class CaptureVideo : public QObject
 {
     Q_OBJECT
 public:
-    explicit CaptureVideo(QObject *parent,FFmpegEncoder* encoder);
+    explicit CaptureVideo(QObject *parent,CaptureFFmpegEncoder* encoder);
     ~CaptureVideo();
 private:
     static void run_thread(void* arg);
@@ -19,9 +19,9 @@ public:
     int pause();
     int stop();
 private:
-    Assistant* mAssist;
-    FFmpegEncoder* mEncoder;
-    bool mIsRecording = false;//是否在录制中
+    CaptureAssistant* mAssistant;
+    CaptureFFmpegEncoder* mEncoder;
+    bool mIsRecord = false;//是否在录制中
     bool mIsStop = true;
     std::thread *mThread;
 

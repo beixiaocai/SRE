@@ -10,8 +10,8 @@ VNCClientWidget::VNCClientWidget(QWidget *parent) : QWidget(parent)
     mainVLayout->setSpacing(0);
 
     QLabel *label = new QLabel(this);
-    label->setStyleSheet(".QLabel{color:rgb(255,255,255);}");
-    label->setText("远程控制功能-开发中");
+    label->setStyleSheet(".QLabel{color:rgb(255,255,255);font-size:30px;}");
+    label->setText("开发中");
     mainVLayout->addSpacing(50);
     mainVLayout->addWidget(label,0,Qt::AlignHCenter);
     mainVLayout->addStretch(50);

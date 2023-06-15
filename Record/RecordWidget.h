@@ -4,13 +4,15 @@
 #include <QWidget>
 #include <QImage>
 #include <QDateTime>
-
+#include <QVector>
+#include "CaptureAssistant.h"
 QT_BEGIN_NAMESPACE
 class QTimer;
 class QLabel;
 class QPushButton;
+class QMediaDevices;
 QT_END_NAMESPACE
-class Assistant;
+
 
 class RecordWidget : public QWidget
 {
@@ -30,12 +32,19 @@ private:
     QLabel    *durationLabel;
     QTimer    *durationTimer;
 
+    QWidget* initRecordWidget();
     QWidget* initRecordSourceWidget();
 
+    QMediaDevices *mMediaDevices;
+    QVector<CaptureDevice*> mVideoDevices;
+    int mSelectedVideoIndex = 0;
+    QVector<CaptureDevice*> mAudioDevices;
+    int mSelectedAudioIndex = 0;
+
 private:
-    Assistant  *mAssist;
-    bool      isRecording;//是否在录制中
-    QDateTime recordStartDate;//开始录制的时间
+    CaptureAssistant  *mAssistant;
+    bool      mIsRecord;//是否在录制中
+    QDateTime mRecordStartDate;//开始录制的时间
 
 signals:
 

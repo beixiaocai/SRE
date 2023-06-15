@@ -41,7 +41,7 @@ ComMessageBox::ComMessageBox(bool success,const QString &text,QWidget *parent) :
 
     QLabel *textLabel = new QLabel(this);
     textLabel->setWordWrap(true);
-    QString tt = QString("<p style='font-family:Microsoft YaHei;font-size:15px;margin:10px;line-height:25px;'>%1</p>").arg(text);
+    QString tt = QString("<p style='font-family:Microsoft YaHei;font-size:16px;margin:4px;line-height:25px;'>%1</p>").arg(text);
     textLabel->setText(tr(tt.toUtf8()));
 
     boxHLayout->addWidget(iconLabel);

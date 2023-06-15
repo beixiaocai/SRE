@@ -15,8 +15,8 @@
 #include <sal.h>
 #include <new>
 #include <DirectXMath.h>
-#include <memory>   //std::unique_ptr
-#include <algorithm>//std::min
+#include <memory>
+#include <algorithm>
 #include <windows.h>
 
 //#pragma comment(lib,"d3d11.lib")

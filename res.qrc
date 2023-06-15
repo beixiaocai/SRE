@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/images/logo.png</file>
+        <file>res/images/icon/error.png</file>
+        <file>res/images/icon/logout.png</file>
+        <file>res/images/icon/password.png</file>
+        <file>res/images/icon/search.png</file>
+        <file>res/images/icon/searchblack.png</file>
+        <file>res/images/icon/settings.png</file>
+        <file>res/images/icon/stop.png</file>
+        <file>res/images/icon/success.png</file>
+        <file>res/images/icon/warning.png</file>
+    </qresource>
+</RCC>

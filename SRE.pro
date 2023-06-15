@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia
 greaterThan(QT_MAJOR_VERSION, 5): QT += core5compat
 
 CONFIG += c++11
@@ -17,7 +17,7 @@ HEADERS += \
     mainwindow.h
 
 RESOURCES += \
-    res/res.qrc
+    res.qrc
 
 RC_ICONS = logo.ico # 配置桌面软件和的图标
 
@@ -33,8 +33,15 @@ include(VNCServer/VNCServer.pri)
 include(VNCClient/VNCClient.pri)
 include(Utils/Utils.pri)
 
+# windows
 win32: LIBS += -ld3d11
-win32: LIBS += -L$$PWD/3rdparty/ffmpeg/lib/ -lavcodec -lavfilter -lavformat -lavutil -lpostproc -lswresample -lswscale
 
+# ffmpeg 6.0
+win32: LIBS += -L$$PWD/3rdparty/ffmpeg/lib/ -lavcodec -lavfilter -lavformat -lavutil -lpostproc -lswresample -lswscale
 INCLUDEPATH += $$PWD/3rdparty/ffmpeg/include
 DEPENDPATH += $$PWD/3rdparty/ffmpeg/include
+
+# AudioRecorder
+win32: LIBS += -L$$PWD/3rdparty/BXC_AudioRecorder/lib/ -lAudioRecorder
+INCLUDEPATH += $$PWD/3rdparty/BXC_AudioRecorder/include
+DEPENDPATH += $$PWD/3rdparty/BXC_AudioRecorder/include

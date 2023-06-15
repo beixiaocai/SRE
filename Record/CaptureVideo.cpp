@@ -1,17 +1,16 @@
 ﻿#include "CaptureVideo.h"
 #include "WindowsDXGIDuplication.h"
-#include "Frame.h"
-#include "FFmpegEncoder.h"
+#include "CaptureFFmpegEncoder.h"
 #include "Utils.h"
-#include "Assistant.h"
+#include "CaptureAssistant.h"
 #include <QImage>
 #include <QDebug>
 #include <QsLog.h>
 
-CaptureVideo::CaptureVideo(QObject *parent,FFmpegEncoder* encoder)
+CaptureVideo::CaptureVideo(QObject *parent,CaptureFFmpegEncoder* encoder)
     : QObject(parent),mEncoder(encoder)
 {
-    mAssist = (Assistant *)parent;
+    mAssistant = (CaptureAssistant *)parent;
     qDebug()<<"CaptureVideo::CaptureVideo()";
 }
 CaptureVideo::~CaptureVideo(){
@@ -20,7 +19,8 @@ CaptureVideo::~CaptureVideo(){
 }
 
 void CaptureVideo::run_thread(void* arg){
-    CaptureVideo *capture = (CaptureVideo*)arg;
+    CaptureVideo *captureVideo = (CaptureVideo*)arg;
+    CaptureDevice *captureDevice = captureVideo->mAssistant->getVideoDevice();
 
     WindowsDXGIDuplication dxgiDuplicaion;
     if (!dxgiDuplicaion.InitDevice())
@@ -43,14 +43,14 @@ void CaptureVideo::run_thread(void* arg){
     int64_t frameCount = 0;
 
     int64_t t1,t2;
-    int interval_duration = int(1000/capture->mEncoder->get_fps());//单帧间隔时长（单位毫秒）
+    int interval_duration = int(1000/captureVideo->mEncoder->getVideoFps());//单帧间隔时长（单位毫秒）
     int interval_sleep;//单帧休眠时长（单位毫秒）
     int total_latency_sleep = 0;//积累滞后的补偿休眠时长（单位毫秒）
 
     while (true)
     {
         t1 = Utils::getCurTimestamp();
-        if(capture->mIsStop){
+        if(captureVideo->mIsStop){
             break;
         }
         if (dxgiDuplicaion.getFrame(10))
@@ -59,11 +59,11 @@ void CaptureVideo::run_thread(void* arg){
             {
                 dxgiDuplicaion.DoneWithFrame();
 
-                Frame *frame = new Frame(FrameFmt::Frame_Fmt_BGRA,bufferSize,width,height,frameCount);
+                CaptureFFmpegEncoder::VideoFrame *frame = new CaptureFFmpegEncoder::VideoFrame(CaptureFFmpegEncoder::Fmt_BGRA,bufferSize,width,height,frameCount);
                 memcpy_s(frame->data,bufferSize,buffer,bufferSize);
-                capture->mEncoder->push_frame(frame);
+                captureVideo->mEncoder->pushVideoFrame(frame);
 
-                if(0==frame->count %2){
+                if(0==frameCount %2){
                     /*
                     // (bgra->rgba)小端模式，RGBA中R存储在低位，A存储在高位
                     uint8_t *rgba = frame->data;
@@ -84,7 +84,7 @@ void CaptureVideo::run_thread(void* arg){
                               ((rgba[i] & 0xFF000000) >> 16);  // ____BB__
                     }
                     QImage image(rgba, frame->width,frame->height,QImage::Format_RGB32);
-                    emit capture->mAssist->setImage(image.copy());
+                    emit captureVideo->mAssistant->setImage(image.copy());
                 }
 
                 frameCount++;
@@ -96,11 +96,11 @@ void CaptureVideo::run_thread(void* arg){
         }
         else
         {
-            Frame *frame = new Frame(FrameFmt::Frame_Fmt_BGRA,bufferSize,width,height,frameCount);
+            CaptureFFmpegEncoder::VideoFrame *frame = new CaptureFFmpegEncoder::VideoFrame(CaptureFFmpegEncoder::Fmt_BGRA,bufferSize,width,height,frameCount);
             memcpy_s(frame->data,bufferSize,buffer,bufferSize);
-            capture->mEncoder->push_frame(frame);
+            captureVideo->mEncoder->pushVideoFrame(frame);
 
-            if(0==frame->count %10){
+            if(0==frameCount %10){
                 uint8_t *rgba = frame->data;
                 for (int i = 0; i < frame->width * frame->height; i++) {
                     rgba[i] = (rgba[i] & 0x000000FF) |         // ______AA
@@ -109,7 +109,7 @@ void CaptureVideo::run_thread(void* arg){
                           ((rgba[i] & 0xFF000000) >> 16);  // ____BB__
                 }
                 QImage image(rgba, frame->width,frame->height,QImage::Format_RGB32);
-                emit capture->mAssist->setImage(image.copy());
+                emit captureVideo->mAssistant->setImage(image.copy());
             }
 
 

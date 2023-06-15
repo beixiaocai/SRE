@@ -52,7 +52,7 @@ QWidget* IndexWidget::initLeftWidget(){
     widgetVLayout->setContentsMargins(0,0,0,0);
     widgetVLayout->setSpacing(0);
 
-    QSize size(160,50);
+    QSize size(140,40);
 
     vncServerBtn = new QPushButton(widget);
     vncServerBtn->setCursor(Qt::PointingHandCursor);
@@ -140,11 +140,11 @@ QWidget* IndexWidget::initLeftWidget(){
 
     QPushButton *settingsBtn = new QPushButton(widget);
     settingsBtn->setText("菜单");
-    settingsBtn->setStyleSheet(".QPushButton {color:rgb(255,255,255);font-size:16px;border:1px solid rgb(76,76,76); border-radius: 3px;padding: 2px;}\
+    settingsBtn->setStyleSheet(".QPushButton {color:rgb(255,255,255);font-size:14px;border:1px solid rgb(76,76,76); border-radius: 3px;padding: 2px;}\
                                .QPushButton:hover {background-color: rgb(53,53,53);}\
                                .QPushButton:focus{outline: none;}");
     settingsBtn->setCursor(Qt::PointingHandCursor);
-    settingsBtn->setFixedSize(90,32);
+    settingsBtn->setFixedSize(90,30);
     connect(settingsBtn,&QPushButton::clicked,this,[this,settingsMenu](){
         settingsMenu->exec(QCursor::pos());
     });
