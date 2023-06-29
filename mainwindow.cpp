@@ -2,6 +2,7 @@
 #include <QApplication>
 #include <QCoreApplication>
 #include <QScreen>
+#include <QResizeEvent>
 #include "SingletonUtils.h"
 #include "IndexWidget.h"
 #include <QDebug>
@@ -21,16 +22,21 @@ MainWindow::MainWindow(QWidget *parent)
     QRect screenRect = screen->geometry();
     int screenWidth = screenRect.width();
     int screenHeight = screenRect.height();
+    SingletonUtils::getInstance()->setScreenSize(screenWidth,screenHeight);
 
-    int initW = int(float(screenWidth) * 0.5);
-    int initH = int(float(screenHeight) * 0.5);
+    int w = int(float(screenWidth) * 0.5);
+    int h = int(float(screenHeight) * 0.5);
 
-    QLOG_INFO() << "MainWindow::MainWindow() screens="<<screens.size()<<",screenWidth="<<screenWidth<<",screenHeight="<<screenHeight<<",initW="<<initW<<",initH="<<initH;
-    qDebug() << "MainWindow::MainWindow() screens="<<screens.size()<<",screenWidth="<<screenWidth<<",screenHeight="<<screenHeight<<",initW="<<initW<<",initH="<<initH;
-
-    this->resize(initW,initH);
+    QLOG_INFO() << "screens="<<screens.size()<<",screenWidth="<<screenWidth<<",screenHeight="<<screenHeight<<",w="<<w<<",h="<<h;
+    qDebug() << "screens="<<screens.size()<<",screenWidth="<<screenWidth<<",screenHeight="<<screenHeight<<",w="<<w<<",h="<<h;
+    this->resize(w,h);
 
     IndexWidget *index = new IndexWidget(this);
     setCentralWidget(index);
+
 }
 
+void MainWindow::resizeEvent(QResizeEvent* event){
+
+//    qDebug()<<"MainWindow::resizeEvent "<<event->size();
+}

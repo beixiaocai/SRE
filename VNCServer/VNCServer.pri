@@ -1,8 +1,8 @@
 HEADERS += \
-    $$PWD/VNCServerWidget.h \
+    $$PWD/VNCServerWidget.h
 	
 SOURCES += \
-    $$PWD/VNCServerWidget.cpp \
+    $$PWD/VNCServerWidget.cpp
 
 
 INCLUDEPATH += VNCServer

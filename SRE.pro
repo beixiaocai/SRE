@@ -1,5 +1,4 @@
 QT       += core gui
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia
 greaterThan(QT_MAJOR_VERSION, 5): QT += core5compat
 
@@ -34,14 +33,11 @@ include(VNCClient/VNCClient.pri)
 include(Utils/Utils.pri)
 
 # windows
-win32: LIBS += -ld3d11
+win32: LIBS += -lws2_32
 
-# ffmpeg 6.0
-win32: LIBS += -L$$PWD/3rdparty/ffmpeg/lib/ -lavcodec -lavfilter -lavformat -lavutil -lpostproc -lswresample -lswscale
-INCLUDEPATH += $$PWD/3rdparty/ffmpeg/include
-DEPENDPATH += $$PWD/3rdparty/ffmpeg/include
+# BXC_MediaLibrary
+win32: LIBS += -L$$PWD/3rdparty/BXC_MediaLibrary/lib/ -lBXC_AudioRecorder -lBXC_VideoRecorder -lBXC_AvEncoder
+INCLUDEPATH += $$PWD/3rdparty/BXC_MediaLibrary/include
+DEPENDPATH += $$PWD/3rdparty/BXC_MediaLibrary/include
 
-# AudioRecorder
-win32: LIBS += -L$$PWD/3rdparty/BXC_AudioRecorder/lib/ -lAudioRecorder
-INCLUDEPATH += $$PWD/3rdparty/BXC_AudioRecorder/include
-DEPENDPATH += $$PWD/3rdparty/BXC_AudioRecorder/include
+

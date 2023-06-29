@@ -1,19 +1,15 @@
 HEADERS += \
-    $$PWD/CaptureAssistant.h \
-    $$PWD/CaptureAudio.h \
-    $$PWD/CaptureFFmpegEncoder.h \
-    $$PWD/CaptureVideo.h \
+    $$PWD/CaptureVideoThread.h\
+    $$PWD/CaptureAudioThread.h\
     $$PWD/RecordWidget.h \
-    $$PWD/WindowsDXGIDuplication.h
+    $$PWD/Recorder.h
 
 	
 SOURCES += \
-    $$PWD/CaptureAssistant.cpp \
-    $$PWD/CaptureAudio.cpp \
-    $$PWD/CaptureFFmpegEncoder.cpp \
-    $$PWD/CaptureVideo.cpp \
+    $$PWD/CaptureVideoThread.cpp\
+    $$PWD/CaptureAudioThread.cpp\
     $$PWD/RecordWidget.cpp \
-    $$PWD/WindowsDXGIDuplication.cpp
+    $$PWD/Recorder.cpp
 
 
 INCLUDEPATH += Record

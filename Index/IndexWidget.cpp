@@ -94,7 +94,7 @@ QWidget* IndexWidget::initLeftWidget(){
     });
 
 
-    // 文件菜单
+    // 菜单start
     QMenu *settingsMenu = new QMenu(this);
 
     QAction *settingsAct = settingsMenu->addAction("设置");
@@ -137,14 +137,16 @@ QWidget* IndexWidget::initLeftWidget(){
     settingsMenu->addAction(feedbackAct);
     settingsMenu->addSeparator();
     settingsMenu->addAction(logoutAct);
+    // 菜单end
 
     QPushButton *settingsBtn = new QPushButton(widget);
+    settingsBtn->setIcon(QIcon(":/res/images/icon/settings.png"));
     settingsBtn->setText("菜单");
-    settingsBtn->setStyleSheet(".QPushButton {color:rgb(255,255,255);font-size:14px;border:1px solid rgb(76,76,76); border-radius: 3px;padding: 2px;}\
+    settingsBtn->setStyleSheet(".QPushButton {color:rgb(255,255,255);font-size:16px;border:1px solid rgb(76,76,76); border-radius: 3px;padding: 2px;}\
                                .QPushButton:hover {background-color: rgb(53,53,53);}\
                                .QPushButton:focus{outline: none;}");
     settingsBtn->setCursor(Qt::PointingHandCursor);
-    settingsBtn->setFixedSize(90,30);
+    settingsBtn->setFixedSize(100,40);
     connect(settingsBtn,&QPushButton::clicked,this,[this,settingsMenu](){
         settingsMenu->exec(QCursor::pos());
     });

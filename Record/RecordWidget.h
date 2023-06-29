@@ -5,14 +5,13 @@
 #include <QImage>
 #include <QDateTime>
 #include <QVector>
-#include "CaptureAssistant.h"
+#include "Recorder.h"
 QT_BEGIN_NAMESPACE
 class QTimer;
 class QLabel;
 class QPushButton;
 class QMediaDevices;
 QT_END_NAMESPACE
-
 
 class RecordWidget : public QWidget
 {
@@ -36,13 +35,13 @@ private:
     QWidget* initRecordSourceWidget();
 
     QMediaDevices *mMediaDevices;
-    QVector<CaptureDevice*> mVideoDevices;
+    QVector<CaptureVideoDevice*> mVideoDevices;
     int mSelectedVideoIndex = 0;
-    QVector<CaptureDevice*> mAudioDevices;
+    QVector<CaptureAudioDevice*> mAudioDevices;
     int mSelectedAudioIndex = 0;
 
 private:
-    CaptureAssistant  *mAssistant;
+    Recorder *mRecorder;
     bool      mIsRecord;//是否在录制中
     QDateTime mRecordStartDate;//开始录制的时间
 
@@ -50,7 +49,8 @@ signals:
 
 public slots:
     void onSetImage(QImage image);
-
+    void onStartBtn(bool checked);
+    void onStopBtn(bool checked);
 };
 
 #endif // RECORDWIDGET_H

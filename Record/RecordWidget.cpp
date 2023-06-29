@@ -19,15 +19,14 @@
 #include <QAudioInput>
 #include <QCameraDevice>
 #include <QMediaDevices>
+#include <QCamera>
 
 RecordWidget::RecordWidget(QWidget *parent) : QWidget(parent)
 {
-
     initUi();
 
-    mAssistant = new CaptureAssistant(this);
-
-    connect(mAssistant, &CaptureAssistant::setImage, this, &RecordWidget::onSetImage);
+    mRecorder = new Recorder(this);
+    connect(mRecorder, &Recorder::setImage, this, &RecordWidget::onSetImage);
 
     mIsRecord = false;
     durationTimer = new QTimer(this);
@@ -41,22 +40,23 @@ RecordWidget::RecordWidget(QWidget *parent) : QWidget(parent)
 
 }
 RecordWidget::~RecordWidget(){
-    disconnect(mAssistant, &CaptureAssistant::setImage, this, &RecordWidget::onSetImage);
-    if(mAssistant){
-        delete mAssistant;
-        mAssistant = nullptr;
+    disconnect(mRecorder, &Recorder::setImage, this, &RecordWidget::onSetImage);
+    if(mRecorder){
+        delete mRecorder;
+        mRecorder = nullptr;
     }
     if(mMediaDevices){
         delete mMediaDevices;
         mMediaDevices = nullptr;
     }
+
     for (int i = 0; i < mVideoDevices.size(); ++i) {
-        CaptureDevice *device = mVideoDevices[i];
+        CaptureVideoDevice *device = mVideoDevices[i];
         delete device;
         device = nullptr;
     }
     for (int i = 0; i < mAudioDevices.size(); ++i) {
-        CaptureDevice *device = mAudioDevices[i];
+        CaptureAudioDevice *device = mAudioDevices[i];
         delete device;
         device = nullptr;
     }
@@ -88,7 +88,7 @@ void RecordWidget::initUi(){
     QWidget *imageWidget = new QWidget(this);
     imageWidget->setStyleSheet(QString(".QWidget{background-color:%1;}").arg("rgb(25,27,38)"));
     QHBoxLayout *imageHLayout = new QHBoxLayout(imageWidget);
-    imageHLayout->setContentsMargins(0,0,0,0);
+    imageHLayout->setContentsMargins(0,1,0,1);
     imageHLayout->setSpacing(0);
 
     imageLabel = new QLabel(imageWidget);
@@ -176,59 +176,8 @@ QWidget* RecordWidget::initRecordWidget(){
     stopBtn->setFixedSize(120,40);
     stopBtn->setCursor(Qt::PointingHandCursor);
     stopBtn->setText(tr("停止"));
-
-    connect(startBtn,&QPushButton::clicked,this,[this](){
-        if(mIsRecord){
-            qDebug()<<"startBtn click, current mIsRecord=true";
-        }else{
-            qDebug()<<"startBtn click, current mIsRecord=false";
-            CaptureDevice *videoDevice = mVideoDevices[mSelectedVideoIndex];
-            CaptureDevice *audioDevice = mAudioDevices[mSelectedAudioIndex];
-            if(CAPTURE_NONE==videoDevice->getType() && CAPTURE_NONE==audioDevice->getType()){
-                ComMessageBox::error(this,"请至少选择一种输入源!");
-                return;
-            }
-
-            startBtn->hide();
-            pauseBtn->show();
-            stopBtn->show();
-
-            mIsRecord = true;
-            mRecordStartDate = QDateTime::currentDateTime();
-            durationTimer->start(1000);
-
-
-
-            if(0!=mAssistant->start(videoDevice,audioDevice)){
-                qDebug()<<"start record error";
-            }
-        }
-
-
-    });
-
-    connect(stopBtn,&QPushButton::clicked,this,[this](){
-        if(mIsRecord){
-            qDebug()<<"stopBtn click, current mIsRecord=true";
-            startBtn->show();
-            pauseBtn->hide();
-            stopBtn->hide();
-
-            mIsRecord = false;
-            durationTimer->stop();
-
-            mAssistant->stop();
-
-            durationLabel->setText(Utils::secondsToDurationStr(0));
-
-
-        }else{
-            qDebug()<<"stopBtn click, current mIsRecord=false";
-
-        }
-
-
-    });
+    connect(startBtn,&QPushButton::clicked,this,&RecordWidget::onStartBtn);
+    connect(stopBtn,&QPushButton::clicked,this,&RecordWidget::onStopBtn);
     pauseBtn->hide();
     stopBtn->hide();
 
@@ -245,25 +194,28 @@ QWidget* RecordWidget::initRecordWidget(){
 QWidget* RecordWidget::initRecordSourceWidget(){
     mMediaDevices = new QMediaDevices(this);
 
-    mVideoDevices.append(new CaptureDevice(CAPTURE_NONE,"请选择视频源","请选择视频源"));
-    mVideoDevices.append(new CaptureDevice(CAPTURE_VIDEO_SCREEN,"系统屏幕","系统屏幕"));
+    mVideoDevices.append(new CaptureVideoDevice("请选择视频源"));
+    mVideoDevices.append(new CaptureVideoDevice(true,false,"系统屏幕(DXGI)","DXGI",25));
+    mVideoDevices.append(new CaptureVideoDevice(true,false,"系统屏幕(GDI)","GDI",20));
+    mAudioDevices.append(new CaptureAudioDevice("请选择音频源"));
+    mAudioDevices.append(new CaptureAudioDevice(true,"系统声音","SOUNDCARD"));
+    mAudioDevices.append(new CaptureAudioDevice(true,"麦克风","MICROPHONE"));
     for (auto &device : mMediaDevices->videoInputs()) {
-        QString description = device.description();
+
         QString name = device.description();
-        if(name.length()> 10){
-            name = name.mid(0,10);
+        QString nickname = device.description();
+        if(nickname.length()> 25){
+            nickname = nickname.mid(0,25);
         }
-        mVideoDevices.append(new CaptureDevice(CAPTURE_VIDEO_CAMERA,name,description));
+        mVideoDevices.append(new CaptureVideoDevice(true,true,nickname,name,25));
     }
-    mAudioDevices.append(new CaptureDevice(CAPTURE_NONE,"请选择音频源","请选择音频源"));
-    mAudioDevices.append(new CaptureDevice(CAPTURE_AUDIO_SOUNDCARD,"系统声音","系统声音"));
     for (auto &device : mMediaDevices->audioInputs()) {
-        QString description = device.description();
         QString name = device.description();
-        if(name.length()> 10){
-            name = name.mid(0,10);
+        QString nickname = device.description();
+        if(nickname.length()> 25){
+            nickname = nickname.mid(0,25);
         }
-        mAudioDevices.append(new CaptureDevice(CAPTURE_AUDIO_MICROPHONE,name,description));
+        mAudioDevices.append(new CaptureAudioDevice(true,nickname,name));
     }
 
     QWidget * widget = new QWidget(this);
@@ -271,33 +223,33 @@ QWidget* RecordWidget::initRecordSourceWidget(){
     widgetHLayout->setContentsMargins(0,0,0,0);
     widgetHLayout->setSpacing(0);
 
-    QString record_source_QComboBox = ".QComboBox {color:rgb(0,0,0);background-color:rgb(255,255,255);font-size:16px;border:1px solid rgb(217,217,217);}\
+    QString record_source_QComboBox = ".QComboBox {color:rgb(0,0,0);background-color:rgb(240,240,240);font-size:15px;border:1px solid rgb(217,217,217);}\
              .QComboBox:hover {border:1px solid rgb(54,98,180);}\
              .QComboBox::drop-down{width:0px;} \
              .QComboBox QAbstractItemView{outline:0px;} \
-             .QComboBox QAbstractItemView::item {font-size:14px;background-color:rgb(255,255,255);height: 28px;border-bottom:1px solid rgb(217,217,217);}\
-             .QComboBox QAbstractItemView::item:selected {color:rgb(0,0,0);}";
+             .QComboBox QAbstractItemView::item {font-size:13px;background-color:rgb(255,255,255);height: 28px;border-bottom:1px solid rgb(217,217,217);}\
+             .QComboBox QAbstractItemView::item:selected {color:rgb(255,255,255);background-color:rgb(54,98,180);}";
 
 
-    //视频源
+    //视频源选择框
     QComboBox * videoSourceBox = new QComboBox(widget);
     videoSourceBox->setStyleSheet(record_source_QComboBox);
-    videoSourceBox->setFixedSize(180,36);
+    videoSourceBox->setFixedSize(220,36);
     QStyledItemDelegate *videoSourceDelegate = new QStyledItemDelegate(videoSourceBox);
     videoSourceBox->setItemDelegate(videoSourceDelegate);
     videoSourceBox->clear();
 
-    //音频源
+    //音频源选择框
     QComboBox * audioSourceBox = new QComboBox(widget);
     audioSourceBox->setStyleSheet(record_source_QComboBox);
-    audioSourceBox->setFixedSize(180,36);
+    audioSourceBox->setFixedSize(220,36);
     QStyledItemDelegate *audioSourceDelegate = new QStyledItemDelegate(audioSourceBox);
     audioSourceBox->setItemDelegate(audioSourceDelegate);
     audioSourceBox->clear();
 
     for (int i = 0; i < mVideoDevices.size(); ++i) {
-        CaptureDevice* device = mVideoDevices[i];
-        videoSourceBox->addItem(device->getName());
+        CaptureVideoDevice* device = mVideoDevices[i];
+        videoSourceBox->addItem(device->getNickname());
     }
     connect(videoSourceBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
           [this](int index){
@@ -305,8 +257,8 @@ QWidget* RecordWidget::initRecordSourceWidget(){
 
     });
     for (int i = 0; i < mAudioDevices.size(); ++i) {
-        CaptureDevice *device = mAudioDevices[i];
-        audioSourceBox->addItem(device->getName());
+        CaptureAudioDevice *device = mAudioDevices[i];
+        audioSourceBox->addItem(device->getNickname());
     }
     connect(audioSourceBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
           [this](int index){
@@ -322,6 +274,49 @@ QWidget* RecordWidget::initRecordSourceWidget(){
 
 
     return widget;
+}
+void RecordWidget::onStartBtn(bool checked){
+
+    if(mIsRecord){
+
+    }else{
+        CaptureVideoDevice *videoDevice = mVideoDevices[mSelectedVideoIndex];
+        CaptureAudioDevice *audioDevice = mAudioDevices[mSelectedAudioIndex];
+
+        if(!videoDevice->isUse() && !audioDevice->isUse()){
+            ComMessageBox::error(this,"请至少选择一种输入源!");
+            return;
+        }
+        QString url = QString("%1/%2.mp4").arg(SingletonUtils::getInstance()->getRecordDir()).
+                arg(QDateTime::currentDateTime().toLocalTime().toString("yyyy-MM-dd-hh-mm-ss"));
+
+        if(mRecorder->start(videoDevice,audioDevice,url)){
+            startBtn->hide();
+            pauseBtn->show();
+            stopBtn->show();
+
+            mIsRecord = true;
+            mRecordStartDate = QDateTime::currentDateTime();
+            durationTimer->start(1000);
+        }else{
+            ComMessageBox::error(this,"输入源存在错误!");
+        }
+    }
+
+}
+void RecordWidget::onStopBtn(bool checked){
+    if(mIsRecord){
+        startBtn->show();
+        pauseBtn->hide();
+        stopBtn->hide();
+        mIsRecord = false;
+        durationTimer->stop();
+        mRecorder->stop();
+        durationLabel->setText(Utils::secondsToDurationStr(0));
+    }else{
+
+
+    }
 }
 void RecordWidget::onSetImage(QImage image)
 {

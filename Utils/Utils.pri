@@ -9,6 +9,7 @@ HEADERS += \
     $$PWD/ComSpinWidget.h \
     $$PWD/ComSplitHWidget.h \
     $$PWD/ComSplitVWidget.h \
+    $$PWD/FpsControl.h \
     $$PWD/constant.h
 	
 SOURCES += \
@@ -20,6 +21,7 @@ SOURCES += \
     $$PWD/ComOptionsBox.cpp \
     $$PWD/ComSpinWidget.cpp \
     $$PWD/ComSplitHWidget.cpp \
-    $$PWD/ComSplitVWidget.cpp
+    $$PWD/ComSplitVWidget.cpp \
+    $$PWD/FpsControl.cpp \
 
 INCLUDEPATH += Utils

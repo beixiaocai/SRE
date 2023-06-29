@@ -24,7 +24,16 @@ SingletonUtils * SingletonUtils::getInstance(){
 
 }
 
-
+void SingletonUtils::setScreenSize(int width,int height){
+    mScreenWidth = width;
+    mScreenHeight = height;
+}
+int SingletonUtils::getScreenWidth(){
+    return mScreenWidth;
+}
+int SingletonUtils::getScreenHeight(){
+    return mScreenHeight;
+}
 void SingletonUtils::setFinger(const QString &finger){
     m_finger = finger;
 }
