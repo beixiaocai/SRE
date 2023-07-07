@@ -13,14 +13,33 @@ namespace BXC_MediaLibrary {
 #ifdef __cplusplus
 	extern "C" {
 #endif
+
+		enum BXC_PixelFormat {
+			PIXEL_UNKNOWN = 20,//未知
+			PIXEL_BGRA,  //BGRA
+			PIXEL_RGB,   //RGB
+		};
+
+
 		struct BXC_VideoRecorder {
-			int id;
+		public:
+			BXC_VideoRecorder() = delete;
+			BXC_VideoRecorder(const char* capture,int width,int height,int idx) {
+				this->capture = capture;
+				this->width = width;
+				this->height = height;
+				this->idx = idx;
+			}
+			~BXC_VideoRecorder() {
+			}
+		public:
+			int id = -1;
 			const char* capture;//视频采样设备,WindowsDXGI: DXGI, WindowsGDI: GDI,或者其他摄像头的具体名称
 			int width;			//视频采样宽度
 			int height;			//视频采样高度
 			int idx;			//视频采样源为屏幕时，具体的屏幕序号
 
-			const char* pixelFormat;//视频帧像素格式:BGRA,RGB
+			BXC_PixelFormat pixelFormat;//视频帧像素格式（BXC_VideoRecorder_Open成功后自动赋值）
 			int factWidth; //接口获取的视频采样设备宽度
 			int factHeight;//接口获取的视频采样设备宽度
 		};
@@ -31,7 +50,7 @@ namespace BXC_MediaLibrary {
 		 * @param recorder 视频采样实例
 		 * @return >= 0 on success, a negative code on failure
 		 */
-		int __DECLSPEC_INC BXC_VideoRecorder_Open(BXC_VideoRecorder*& recorder);
+		int __DECLSPEC_INC BXC_VideoRecorder_Open(BXC_VideoRecorder* recorder);
 		
 		/**
 		 * 关闭一个视频采样实例

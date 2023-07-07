@@ -9,7 +9,8 @@ class VNCServerWidget : public QWidget
     Q_OBJECT
 public:
     explicit VNCServerWidget(QWidget *parent);
-
+private:
+    void initUi();
 signals:
 
 };

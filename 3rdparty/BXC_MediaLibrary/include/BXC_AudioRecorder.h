@@ -14,13 +14,22 @@ namespace BXC_MediaLibrary {
 	extern "C" {
 #endif
 		struct BXC_AudioRecorder {
-			int id;
+		public:
+			BXC_AudioRecorder() = delete;
+			BXC_AudioRecorder(const char* capture) {
+				this->capture = capture;
+			}
+			~BXC_AudioRecorder() {
+			}
+		public:
+			int id = -1;
+			const char* capture;//音频采样设备,默认声卡:SOUNDCARD, 默认麦克风:MICROPHONE
+
 			int nb_channels;//音频采样声道数（常见值：2,1）
 			int nb_bits_sample;//一个音频采样点的比特数（常见值：16,8,24）
 			int sample_rate;//音频采样率（常见值：44100,48000）
 			int nb_samples;//一帧音频的采样点数量（常见值：1024,1056,1152）
 
-			const char* capture;//音频采样设备,默认声卡:SOUNDCARD, 默认麦克风:MICROPHONE
 		};
 
 		/**
@@ -29,7 +38,7 @@ namespace BXC_MediaLibrary {
 		 * @param recorder 音频采样实例
 		 * @return >= 0 on success, a negative code on failure
 		 */
-		int __DECLSPEC_INC BXC_AudioRecorder_Open(BXC_AudioRecorder *& recorder);
+		int __DECLSPEC_INC BXC_AudioRecorder_Open(BXC_AudioRecorder * recorder);
 
 		/**
 		 * 关闭一个音频采样实例

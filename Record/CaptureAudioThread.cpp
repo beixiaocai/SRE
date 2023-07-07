@@ -29,6 +29,8 @@ void CaptureAudioThread::run(){
     BXC_AudioRecorder * audioRecorder = mRecorder->getAudioRecorder();
     BXC_AvEncoder * avEncoder = mRecorder->getAvEncoder();
 
+    BXC_AvFrame* audioFrame = new BXC_AvFrame(AVAUDIO, 10000);
+
     uint8_t* audioBuff = new uint8_t[10000];
     int      audioBuffSize = 0;
 
@@ -57,7 +59,12 @@ void CaptureAudioThread::run(){
                 audioBuffSize += recvBuffSize;
 
                 if (audioBuffSize >= frameSize) {
-                    BXC_send_audio_frame(avEncoder, frameSize, audioBuff, frameTimestamp, frameCount);
+                    memcpy(audioFrame->data, audioBuff, frameSize);
+                    audioFrame->size = frameSize;
+                    audioFrame->timestamp = frameTimestamp;
+                    audioFrame->count = frameCount;
+
+                    BXC_send_frame(avEncoder, audioFrame);
 
                     audioBuffSize -= frameSize;
                     memmove(audioBuff, audioBuff + frameSize, audioBuffSize);

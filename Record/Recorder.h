@@ -36,7 +36,6 @@ public:
         return mFps;
     }
 
-    QString pixelFormat;
     int width;
     int height;
 private:
@@ -86,6 +85,7 @@ public:
     BXC_VideoRecorder* getVideoRecorder();
     BXC_AudioRecorder* getAudioRecorder();
     BXC_AvEncoder* getAvEncoder();
+    BXC_PixelFormat getPixelFormat();
 private:
     CaptureVideoDevice *mVideoDevice = nullptr;
     CaptureAudioDevice *mAudioDevice = nullptr;
@@ -95,6 +95,7 @@ private:
     BXC_AudioRecorder  *mAudioRecorder = nullptr;
     BXC_AvEncoder      *mAvEncoder = nullptr;
     bool mIsStop = true;
+    BXC_PixelFormat mPixelFormat = PIXEL_UNKNOWN;
 
 signals:
     void setImage(QImage image);

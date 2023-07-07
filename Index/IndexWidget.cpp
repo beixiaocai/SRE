@@ -27,7 +27,8 @@
 
 IndexWidget::IndexWidget(QWidget *parent) : QWidget(parent)
 {
-
+    setAttribute(Qt::WA_StyledBackground,true);
+    setStyleSheet(".IndexWidget{background-color:rgb(76,76,76);}");//31,33,42->76,76,76
     initUi();
     initSettings();
 
@@ -39,10 +40,10 @@ void IndexWidget::initUi(){
 
     QWidget *leftWidget = initLeftWidget();
     leftWidget->setFixedWidth(200);
-    QWidget *rightWidget = initRightWidget();
 
+    QWidget *rightWidget = initRightWidget();
     mainHLayout->addWidget(leftWidget);
-    mainHLayout->addSpacing(2);
+    mainHLayout->addSpacing(1);
     mainHLayout->addWidget(rightWidget);
 }
 QWidget* IndexWidget::initLeftWidget(){
@@ -58,13 +59,13 @@ QWidget* IndexWidget::initLeftWidget(){
     vncServerBtn->setCursor(Qt::PointingHandCursor);
     vncServerBtn->setStyleSheet(left_btn_no_background);
     vncServerBtn->setFixedSize(size);
-    vncServerBtn->setText("远程控制");
+    vncServerBtn->setText("远程协助");
 
     vncClientBtn = new QPushButton(widget);
     vncClientBtn->setCursor(Qt::PointingHandCursor);
     vncClientBtn->setStyleSheet(left_btn_no_background);
     vncClientBtn->setFixedSize(size);
-    vncClientBtn->setText("设备列表");
+    vncClientBtn->setText("远程控制");
 
     recordBtn = new QPushButton(widget);
     recordBtn->setCursor(Qt::PointingHandCursor);

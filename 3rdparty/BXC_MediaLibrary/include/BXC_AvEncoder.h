@@ -5,29 +5,13 @@
 #else
 #define __DECLSPEC_INC __declspec(dllimport)
 #endif //!BXC_MEDIALIBRARY_EXPORTS
-#include <string>
+#include "BXC_AvFrame.h"
+
 namespace BXC_MediaLibrary {
 
 #ifdef __cplusplus
 	extern "C" {
 #endif
-		struct BXC_AvEncoder {
-			int id;
-
-			bool hasVideo = false;//是否编码视频流
-			const char* videoCodecName = "";//视频编码名称
-			const char* pixelFormat = "";//视频帧像素格式 BGRA,RGB
-			int width = 0;//视频宽
-			int height = 0;//视频高
-			int fps = 0;// 视频编码帧率
-			int videoBitrate = 0;//视频编码码率
-
-			bool hasAudio = false;//是否编码音频流
-			const char* audioCodecName = "";//视频编码名称
-			int audioBitrate = 0;//音频编码码率
-
-		};
-
 
 		/**
 		 * 打开一个音视频编码器实例
@@ -36,7 +20,7 @@ namespace BXC_MediaLibrary {
 		 * @param url 存储地址
 		 * @return >= 0 on success, a negative code on failure
 		 */
-		int __DECLSPEC_INC BXC_AvEncoder_Open(BXC_AvEncoder*& encoder, const char* url);
+		int __DECLSPEC_INC BXC_AvEncoder_Open(BXC_AvEncoder* encoder, const char* url);
 
 		/**
 		 * 关闭一个音视频编码器实例
@@ -54,30 +38,23 @@ namespace BXC_MediaLibrary {
 		int64_t __DECLSPEC_INC BXC_gettime();
 
 		/**
-		* 添加一帧待编码视频帧
+		* 添加一帧待编码帧
 		*
 		* @param encoder 音视频编码器实例
-		* @param size 视频帧字节流长度
-		* @param data 视频帧字节流
-		* @param timestamp 视频帧捕获时间戳（microseconds）
-		* @param width 视频帧捕获宽度
-		* @param height 视频帧捕获高度
-		* @param count 视频帧捕获序号
+		* @param frame 待编码帧
 		* @return >= 0 on success, a negative code on failure
 		*/
-		int __DECLSPEC_INC BXC_send_video_frame(BXC_AvEncoder* encoder, int size, uint8_t* data,int64_t timestamp, int width, int height, int64_t count);
+		int __DECLSPEC_INC BXC_send_frame(BXC_AvEncoder* encoder, BXC_AvFrame* frame);
 		
 		/**
-		* 添加一帧待编码音频帧
+		* 获取一帧编码帧
 		*
-		* @param encoder 音视频编码实例，由BXC_AvEncoder_New创建
-		* @param size 音频帧字节流长度
-		* @param data 音频帧字节流
-		* @param timestamp 音频帧捕获时间戳（microseconds）
-		* @param count 音频帧捕获序号
+		* @param encoder 音视频编码器实例
+		* @param packet 获取的编码帧（获取的编码帧类型，取决于参数中的type）
 		* @return >= 0 on success, a negative code on failure
 		*/
-		int __DECLSPEC_INC BXC_send_audio_frame(BXC_AvEncoder* encoder, int size, uint8_t* data, int64_t timestamp, int64_t count);
+		int __DECLSPEC_INC BXC_receive_packet(BXC_AvEncoder* encoder, BXC_AvPacket* packet);
+
 
 #ifdef __cplusplus
 	}

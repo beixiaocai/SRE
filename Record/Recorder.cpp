@@ -39,12 +39,7 @@ bool Recorder::start(CaptureVideoDevice* videoDevice,CaptureAudioDevice* audioDe
 
     if(hasVideo){
         const char * videoCapture = mVideoDevice->getName().toStdString().data();
-
-        mVideoRecorder = new BXC_VideoRecorder;
-        mVideoRecorder->capture = videoCapture;
-        mVideoRecorder->width = mVideoDevice->width;
-        mVideoRecorder->height = mVideoDevice->height;
-        mVideoRecorder->idx = 0;
+        mVideoRecorder = new BXC_VideoRecorder(videoCapture,mVideoDevice->width,mVideoDevice->height,0);
 
         ret = BXC_VideoRecorder_Open(mVideoRecorder);
         if (ret < 0) {
@@ -53,13 +48,12 @@ bool Recorder::start(CaptureVideoDevice* videoDevice,CaptureAudioDevice* audioDe
 
         mVideoDevice->width = mVideoRecorder->factWidth;
         mVideoDevice->height = mVideoRecorder->factHeight;
-        mVideoDevice->pixelFormat = mVideoRecorder->pixelFormat;
+        mPixelFormat = mVideoRecorder->pixelFormat;
 
     }
     if(hasAudio){
         const char * audioCapture = mAudioDevice->getName().toStdString().data();
-        mAudioRecorder = new BXC_AudioRecorder;
-        mAudioRecorder->capture = audioCapture;
+        mAudioRecorder = new BXC_AudioRecorder(audioCapture);
 
         ret = BXC_AudioRecorder_Open(mAudioRecorder);
         if (ret < 0) {
@@ -67,19 +61,9 @@ bool Recorder::start(CaptureVideoDevice* videoDevice,CaptureAudioDevice* audioDe
         }
     }
 
-    mAvEncoder = new BXC_AvEncoder;
-    mAvEncoder->hasVideo = hasVideo;
-    mAvEncoder->videoCodecName = videoCodecName;
-    mAvEncoder->pixelFormat = mVideoDevice->pixelFormat.toLatin1().constData();
-    mAvEncoder->width = mVideoDevice->width;
-    mAvEncoder->height = mVideoDevice->height;
-    mAvEncoder->fps = fps;
-    mAvEncoder->videoBitrate = videoBitrate;
-
-    mAvEncoder->hasAudio = hasAudio;
-    mAvEncoder->audioCodecName = audioCodecName;
-    mAvEncoder->audioBitrate = audioBitrate;
-
+    mAvEncoder = new BXC_AvEncoder(hasVideo, videoCodecName, videoBitrate, mPixelFormat,
+                                   mVideoDevice->width, mVideoDevice->height, fps,
+                                   hasAudio, audioCodecName, audioBitrate);
 
     ret = BXC_AvEncoder_Open(mAvEncoder,url.toLatin1().constData());
     if (ret < 0) {
@@ -148,6 +132,9 @@ bool Recorder::stop(){
 }
 BXC_VideoRecorder* Recorder::getVideoRecorder(){
     return mVideoRecorder;
+}
+BXC_PixelFormat Recorder::getPixelFormat(){
+    return mPixelFormat;
 }
 BXC_AudioRecorder* Recorder::getAudioRecorder(){
     return mAudioRecorder;

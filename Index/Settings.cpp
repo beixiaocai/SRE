@@ -20,12 +20,10 @@
 Settings::Settings(QWidget *parent) : QDialog(parent)
 {
     setWindowFlags(Qt::Dialog| Qt::WindowCloseButtonHint);
+    setFixedSize(1000,600);
     setAttribute(Qt::WA_StyledBackground,true);
+    setStyleSheet(QString(".Settings{background-color:%1;}").arg("rgb(31,33,42)"));
     setWindowTitle("设置");
-    setFixedSize(900,600);
-
-    this->setStyleSheet(QString(".Settings{background-color:%1;}").arg("rgb(31,33,42)"));
-
     initUi();
 
 }

@@ -30,9 +30,13 @@ void CaptureVideoThread::run(){
     int width = mVideoDevice->width;
     int height = mVideoDevice->height;
 
+
     int      frameBuffSize = height * width * 4;
     uint8_t* frameBuff = new uint8_t[frameBuffSize];
     uint8_t* frameBuff_rgba = new uint8_t[frameBuffSize];
+
+    BXC_AvFrame* videoFrame = new BXC_AvFrame(AVVIDEO, frameBuffSize);
+
 
     int64_t frameTimestamp = 0;
     int64_t frameCount = 0;
@@ -55,11 +59,16 @@ void CaptureVideoThread::run(){
         ret = BXC_get_frame(mRecorder->getVideoRecorder(), frameBuff, frameBuffSize,frameTimestamp);
 
         if (ret >= 0) {
-            BXC_send_video_frame(mRecorder->getAvEncoder(),frameBuffSize,frameBuff,frameTimestamp,
-                               width,height,frameCount);
+
+            memcpy(videoFrame->data, frameBuff, frameBuffSize);
+            videoFrame->size = frameBuffSize;
+            videoFrame->timestamp = frameTimestamp;
+            videoFrame->count = frameCount;
+
+            BXC_send_frame(mRecorder->getAvEncoder(), videoFrame);
 
             if(0 == frameCount % show_interval){
-                if("BGRA" == mVideoDevice->pixelFormat){
+                if(PIXEL_BGRA == mRecorder->getPixelFormat()){
                     // (bgra->rgba)大端模式，RGBA中R存储在高位，A存储在低位
                     memcpy_s(frameBuff_rgba,frameBuffSize,frameBuff,frameBuffSize);
                     for (int i = 0; i < width*height; i++) {
@@ -71,7 +80,7 @@ void CaptureVideoThread::run(){
                     QImage image(frameBuff_rgba, width,height,QImage::Format_RGB32);
                     emit mRecorder->setImage(image.copy());
 
-                }else if("RGB" == mVideoDevice->pixelFormat){
+                }else if(PIXEL_RGB == mRecorder->getPixelFormat()){
                     QImage image(frameBuff, width,height,QImage::Format_RGB888);
                     emit mRecorder->setImage(image.copy());
                 }

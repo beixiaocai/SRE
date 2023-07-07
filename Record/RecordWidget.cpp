@@ -78,7 +78,7 @@ void RecordWidget::initUi(){
     QLabel *nameLabel = new QLabel(nameWidget);
     nameLabel->setFixedHeight(30);
     nameLabel->setStyleSheet(".QLabel{color:rgb(255,255,255);font-size:15px;border:1px solid rgb(76,76,76); border-radius: 2px;padding: 4px 8px;}");
-    nameLabel->setText(tr("录屏预览"));
+    nameLabel->setText(tr("录制屏幕"));
     nameHLayout->addStretch(10);
     nameHLayout->addWidget(nameLabel);
     nameHLayout->addStretch(10);
